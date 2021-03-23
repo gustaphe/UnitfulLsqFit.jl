@@ -53,7 +53,7 @@ function curve_fit(
     return LsqFitResult(
         auxfit.param .* punits,
         auxfit.resid * yunit,
-        auxfit.jacobian * yunit / xunit,
+        auxfit.jacobian * yunit ./ reshape(punits, 1, :),
         auxfit.converged,
         auxfit.wt,
     )
