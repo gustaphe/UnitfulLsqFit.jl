@@ -30,5 +30,6 @@ plot!(t,model(t, fit.param);
          xguide="t", yguide="v", unitformat=(l,u)->"\$$l / $(latexraw(u))\$", legend=-45,
      )
 savefig("1.svg") # hide
+nothing # hide
 ```
 ![](1.svg)
