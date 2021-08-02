@@ -12,9 +12,11 @@ y = model(x, p0) + randn(L)
     r = curve_fit(
         model, x * u"m", y * u"s", [0.0u"s", 1.0u"s", 0.0u"m", 1.0u"m", 1.0u"s/m"]
     )
+    print("\nManually check accuracy:\n\nTruth\tResult\n",'━'^35,'\n')
     for (a, b) in zip(p0, r.param)
         print(a, '\t', b, '\n')
     end
+    println()
     @test r.converged
     @test unit.(r.param) == [u"s", u"s", u"m", u"m", u"s/m"]
     r = curve_fit(model, x * u"m", y, [0.0, 1.0, 0.0u"m", 1.0u"m", 1.0u"1/m"])

@@ -33,3 +33,13 @@ savefig("1.svg") # hide
 nothing # hide
 ```
 ![](1.svg)
+
+## Warning concerning exponential fits
+
+Consider the function ``y(x) = x^p``. If you know the dimension of ``y`` and
+``x``, and neither of them is unitless, there is exactly one choice of ``p``
+that allows this comparison -- and any adjacent ``p^*`` will not only make the
+comparison inaccurate but impossible. Curve fitting in this case doesn't make
+sense, and will most likely simply fail with `UnitfulLsqFit`. *The
+dimensionality of the edxpression can not be determined by the values of the
+fit parameters.*

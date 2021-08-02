@@ -32,7 +32,7 @@ end
 function curve_fit(
     model,
     xdata::AbstractArray{<:AbstractQuantity},
-    ydata::AbstractArray{<:AbstractQuantity},
+    ydata::AbstractArray,
     p0::AbstractArray{<:AbstractQuantity};
     normalize=false,
     kwargs...,
@@ -48,7 +48,8 @@ function curve_fit(
     Y = ustrip.(yunit, ydata)
     P = ustrip.(punits, p0)
 
-    auxfit = curve_fit(model, X, Y, P; kwargs...)
+    auxmodel(x, p) = ustrip.(yunit, model(x .* xunit, p .* punits))
+    auxfit = curve_fit(auxmodel, X, Y, P; kwargs...)
 
     return LsqFitResult(
         auxfit.param .* punits,
@@ -59,7 +60,8 @@ function curve_fit(
     )
 end
 
-function curve_fit(
+# Orthogonals {{{
+function curve_fit( # 1 0
     model,
     xdata::AbstractArray{<:AbstractQuantity},
     ydata::AbstractArray,
@@ -68,14 +70,15 @@ function curve_fit(
 )
     return curve_fit(model, xdata, ydata * u"one", p0 * u"one"; kwargs...)
 end
-function curve_fit(
+
+function curve_fit( # 0 1
     model,
     xdata::AbstractArray,
-    ydata::AbstractArray{<:AbstractQuantity},
-    p0::AbstractArray;
+    ydata::AbstractArray,
+    p0::AbstractArray{<:AbstractQuantity};
     kwargs...,
 )
-    return curve_fit(model, xdata * u"one", ydata, p0 * u"one"; kwargs...)
+    return curve_fit(model, xdata * u"one", ydata * u"one", p0; kwargs...)
 end
 
 end
